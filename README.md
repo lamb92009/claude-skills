@@ -13,6 +13,40 @@ Skills are not all loaded at once. Instead:
 
 `lamb-brand-reference` is a permanent local skill (private business data — not in this repo).
 
+## Advanced Features
+
+### Token Budget Display
+
+When recommending skills, `skill-loader` estimates how many tokens each skill will consume when loaded. Token counts are derived from each skill file's byte size (bytes ÷ 4). Recommendations are displayed with per-skill estimates and a session total:
+
+```
+✓ `react-expert`    — React project detected in package.json   (~1,200 tokens)
+✓ `test-master`     — Jest config found                        (~800 tokens)
+✓ `api-designer`    — REST API work mentioned                  (~600 tokens)
+
+Session token budget: ~2,600 tokens
+```
+
+This helps you make informed decisions about which skills to include based on your context budget.
+
+### `--quick` Flag
+
+Invoke `skill-loader --quick` (or say "quick mode" / "skip confirmation") to auto-fetch the recommended skills without waiting for confirmation. The list and token budget are still displayed for visibility, but no response is needed.
+
+**Example:** `skill-loader --quick` — generates recommendations and fetches them immediately.
+
+### Category Filtering
+
+Narrow recommendations to a specific category by describing what you need:
+
+- `"infrastructure skills only"` → only Infrastructure & DevOps skills
+- `"web framework skills"` → only Web Frameworks skills
+- `"data and ml"` → only Data & ML skills
+
+Available categories: **Language Experts**, **Web Frameworks**, **Data & ML**, **Infrastructure & DevOps**, **API & Integration**, **Mobile**, **Specialized Domains**, **Process & Quality**
+
+Combine with `--quick` for fast, focused loading: `skill-loader --quick infrastructure skills only`
+
 ---
 
 ## Skills by Category

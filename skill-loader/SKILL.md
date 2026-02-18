@@ -7,6 +7,31 @@ description: Reads the remote skill catalog from GitHub, analyzes project contex
 
 Load only the skills you need for this session from the central skill repository at `lamb92009/claude-skills`.
 
+## Flags & Modifiers
+
+Before starting, check whether the user invoked skill-loader with any modifiers or constraints:
+
+### `--quick` mode
+If the user said `skill-loader --quick`, "quick mode", "skip confirmation", or "just fetch":
+- Run Steps 1–3 normally
+- **Skip Step 4 confirmation** — proceed directly to Step 5 (fetch) with the auto-generated list
+- Still display the token budget and skill list so the user can see what was loaded
+
+### Category filter
+If the user specified a category (e.g., "infrastructure skills only", "only web frameworks", "data & ml skills"):
+- In Step 3, **only consider skills from the requested category**
+- Note the active filter when presenting recommendations
+
+Available categories (match loosely):
+- **Language Experts** — javascript-pro, typescript-pro, python-pro, golang-pro, rust-engineer, java-architect, kotlin-specialist, csharp-developer, cpp-pro, php-pro, swift-expert
+- **Web Frameworks** — react-expert, react-native-expert, nextjs-developer, vue-expert, vue-expert-js, angular-architect, nestjs-expert, django-expert, fastapi-expert, rails-expert, laravel-specialist, spring-boot-engineer, dotnet-core-expert, wordpress-pro, shopify-expert
+- **Data & ML** — sql-pro, postgres-pro, database-optimizer, pandas-pro, ml-pipeline, fine-tuning-expert, rag-architect, spark-engineer
+- **Infrastructure & DevOps** — devops-engineer, cloud-architect, kubernetes-specialist, terraform-engineer, monitoring-expert, sre-engineer
+- **API & Integration** — api-designer, graphql-architect, websocket-engineer, mcp-developer, atlassian-mcp, salesforce-developer
+- **Mobile** — flutter-expert
+- **Specialized Domains** — cli-developer, embedded-systems, game-developer, security-reviewer, secure-code-guardian, chaos-engineer, playwright-expert, email-design, content-strategy, prompt-engineer
+- **Process & Quality** — architecture-designer, code-reviewer, debugging-wizard, test-master, legacy-modernizer, spec-miner, microservices-architect, fullstack-guardian, feature-forge, code-documenter, the-fool, ui-ux-pro-max
+
 ## Step 1 — Fetch the catalog
 
 Run this to get the README:
@@ -57,29 +82,43 @@ These skills are installed locally at all times. Do not recommend fetching them 
 - `skill-loader`
 - `skill-cleanup`
 
-## Step 3 — Generate recommendations
+## Step 3 — Generate recommendations and estimate token budget
 
-Based on the catalog descriptions and project signals, select skills that are **directly relevant** to this project and session. For each recommendation, give one sentence of reasoning tied to a specific signal. **Skip any permanent residents listed above — they are always available without fetching.**
+Based on the catalog descriptions, project signals, and any active category filter, select skills that are **directly relevant** to this project and session. For each recommendation, give one sentence of reasoning tied to a specific signal. **Skip any permanent residents listed above.**
 
-**Aim for 3–8 skills.** Be selective — do not recommend everything. Skills you don't recommend are still available if asked.
+**Aim for 3–8 skills.** Be selective — do not recommend everything.
+
+After selecting candidates, fetch file sizes from the GitHub tree to estimate their token cost:
+
+```bash
+bash -c 'source ~/.bashrc && gh api "repos/lamb92009/claude-skills/git/trees/main?recursive=1" --jq "[.tree[] | select(.path | endswith(\"/SKILL.md\")) | {skill: (.path | split(\"/\")[0]), bytes: .size}]"'
+```
+
+For each recommended skill, find its byte count in the output. Estimate tokens as `bytes ÷ 4`, rounded to the nearest 100. Sum them for the session total.
 
 ## Step 4 — Present and confirm
 
 Present in this format:
 
 ```
+[If category filter active]: Filtering to [Category Name] skills only.
+
 Based on [key signals observed], I recommend fetching these skills:
 
-✓ `skill-name` — reason tied to specific signal
-✓ `skill-name` — reason tied to specific signal
-...
+✓ `skill-name` — reason tied to specific signal   (~800 tokens)
+✓ `skill-name` — reason tied to specific signal   (~1,200 tokens)
+✓ `skill-name` — reason tied to specific signal   (~600 tokens)
+
+Session token budget: ~2,600 tokens
 
 Also available but not recommended for this project: skill-a, skill-b, skill-c
 
 Confirm this list, adjust it, or add skill names?
 ```
 
-**Wait for the user to respond before fetching anything.**
+**In `--quick` mode:** Display the list and token budget, then proceed directly to Step 5 without waiting. Append a note: `(--quick mode: fetching immediately)`
+
+**Otherwise:** Wait for the user to respond before fetching anything.
 
 ## Step 5 — Fetch approved skills
 

@@ -128,11 +128,15 @@ Skills are not all loaded at once. Instead:
 
 ---
 
-## Skill Management Skills (always local, not in catalog)
+## Permanent Local Skills (always installed, never fetched or cleaned up)
 
-These two skills live permanently in `~/.claude/skills/` and are never fetched from this repo:
+These skills live permanently in `~/.claude/skills/` and are never fetched from this repo or removed by `skill-cleanup`:
 
 | Skill | Description |
 |-------|-------------|
 | `skill-loader` | Reads this README, analyzes project context, recommends and fetches relevant skills for the session |
 | `skill-cleanup` | Removes session-fetched skills from `~/.claude/skills/` using the `.session-skills` manifest |
+| `debugging-wizard` | Use when investigating errors, analyzing stack traces, or finding root causes of unexpected behavior. Invoke for error investigation, troubleshooting, log analysis, root cause analysis. |
+| `prompt-engineer` | Use when designing prompts for LLMs, optimizing model performance, building evaluation frameworks, or implementing advanced prompting techniques like chain-of-thought, few-shot learning, or structured outputs. |
+| `devops-engineer` | Use when setting up CI/CD pipelines, containerizing applications, or managing infrastructure as code. Invoke for pipelines, Docker, Kubernetes, cloud platforms, GitOps. |
+| `lamb-brand-reference` | Brand and email reference for Lamb Screen Printing — colors, typography, social links, EngineMailer requirements. **Private — not in this repo, local only.** |

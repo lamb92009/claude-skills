@@ -32,7 +32,8 @@ rm -rf ~/.claude/skills/<skill-name>
 echo "Removed: <skill-name>"
 ```
 
-Never remove: `lamb-brand-reference`, `skill-loader`, `skill-cleanup` — even if they appear in the manifest.
+Never remove these permanent residents — even if they appear in the manifest:
+`lamb-brand-reference`, `debugging-wizard`, `prompt-engineer`, `devops-engineer`, `skill-loader`, `skill-cleanup`
 
 ## Step 4 — Remove the manifest
 

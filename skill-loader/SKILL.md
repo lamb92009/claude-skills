@@ -46,9 +46,20 @@ Also note:
 - What task or goal has the user stated for this session?
 - What file extensions dominate the working directory?
 
+## Permanent residents (always available — never fetch, never add to manifest)
+
+These skills are installed locally at all times. Do not recommend fetching them (they're already present) and do not write them to `.session-skills`:
+
+- `lamb-brand-reference`
+- `debugging-wizard`
+- `prompt-engineer`
+- `devops-engineer`
+- `skill-loader`
+- `skill-cleanup`
+
 ## Step 3 — Generate recommendations
 
-Based on the catalog descriptions and project signals, select skills that are **directly relevant** to this project and session. For each recommendation, give one sentence of reasoning tied to a specific signal.
+Based on the catalog descriptions and project signals, select skills that are **directly relevant** to this project and session. For each recommendation, give one sentence of reasoning tied to a specific signal. **Skip any permanent residents listed above — they are always available without fetching.**
 
 **Aim for 3–8 skills.** Be selective — do not recommend everything. Skills you don't recommend are still available if asked.
 
